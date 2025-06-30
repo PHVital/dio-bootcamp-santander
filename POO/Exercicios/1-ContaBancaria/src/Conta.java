@@ -10,6 +10,7 @@ public class Conta {
         this.saldo = saldoInicial;
         this.limiteChequeEspecial = saldoInicial <= 500 ? 50 : saldoInicial * 0.5;
         this.chequeEspecialDisponivel = limiteChequeEspecial;
+        this.dividaChequeEspecial = 0.0;
     }
 
     // MÉTODOS DE CONSULTA
@@ -35,25 +36,29 @@ public class Conta {
             System.out.println("Valor de depósito inválido.");
             return;
         }
+
+        System.out.println("Depositando R$" + valor + " ...");
+
         if (this.dividaChequeEspecial > 0) {
-            if (valor <= this.dividaChequeEspecial) {
-                valor -= this.dividaChequeEspecial;
+            double valorAposQuitar = valor - this.dividaChequeEspecial;
+
+            if (valorAposQuitar >= 0) {
+                System.out.println("Divida de R$" + this.dividaChequeEspecial + " foi quitada!");
                 this.saldo += this.dividaChequeEspecial;
-                this.dividaChequeEspecial = 0;
-
-                double valorUtilizado = this.limiteChequeEspecial - this.chequeEspecialDisponivel;
-                this.chequeEspecialDisponivel += valorUtilizado;
-
-                System.out.println("Dívida do Cheque Especial quitada!");
+                this.dividaChequeEspecial = 0.0;
+                this.chequeEspecialDisponivel = this.limiteChequeEspecial;
+                this.saldo += valorAposQuitar;
             } else {
-                this.dividaChequeEspecial -= valor;
                 this.saldo += valor;
-                System.out.println("Pagamento parcial da dívida do Cheque Especial. Restante: R$" + this.dividaChequeEspecial);
-                valor = 0;
+                this.dividaChequeEspecial -= valor;
+                System.out.println("Pagamento parcial da dívida do cheque especial. Dívida restante: R$" + this.dividaChequeEspecial);
             }
+        } else {
+            this.saldo += valor;
         }
-        this.saldo += valor;
-        System.out.println("Depósito realizado. Saldo atual: R$" + this.saldo);
+
+        System.out.println("Operação finalizada. Saldo atual: R$" + this.saldo);
+        consultarChequeEspecial();
     }
 
     public void sacar(double valor) {
@@ -62,7 +67,7 @@ public class Conta {
             return;
         }
 
-        double saldoTotalDisponivel = this.saldo - this.chequeEspecialDisponivel;
+        double saldoTotalDisponivel = this.saldo + this.chequeEspecialDisponivel;
 
         if (valor > saldoTotalDisponivel) {
             System.out.println("Saque não realizado. Saldo e limite de Cheque Especial insuficientes.");
@@ -73,11 +78,10 @@ public class Conta {
 
         if (this.saldo < 0) {
             double valorUtilizadoDoCheque = -this.saldo;
+            this.saldo = 0;
             this.chequeEspecialDisponivel -= valorUtilizadoDoCheque;
-
             this.dividaChequeEspecial = valorUtilizadoDoCheque * 1.2;
-
-            System.out.println("Você utilizou o Cheque Especial.");
+            System.out.println("Você utilizou R$" + valorUtilizadoDoCheque + " do Cheque Especial.");
         }
         System.out.println("Saque realizado. Saldo disponivel: R$" + this.saldo);
         consultarChequeEspecial();
