@@ -1,17 +1,18 @@
 public class Main {
     public static void main(String[] args) {
-        ListaTarefa listaTarefa = new ListaTarefa();
-        System.out.println("O numero total de tarefas é " + listaTarefa.obterNumeroTotalTarefas());
-        listaTarefa.adicionarTarefa("Tarefa 1");
-        listaTarefa.adicionarTarefa("Tarefa 1");
-        listaTarefa.adicionarTarefa("Tarefa 2");
+        CarrinhoDeCompras carrinho = new CarrinhoDeCompras();
+        carrinho.exibirItens();
 
-        System.out.println("O numero total de tarefas é " + listaTarefa.obterNumeroTotalTarefas());
+        carrinho.adicionarItem("Pao", 0.50, 5);
+        carrinho.adicionarItem("Pao", 0.50, 5);
+        carrinho.adicionarItem("Manteiga", 5.00, 1);
 
-        listaTarefa.removerTarefa("Tarefa 2");
+        carrinho.exibirItens();
 
-        System.out.println("O numero total de tarefas é " + listaTarefa.obterNumeroTotalTarefas());
+        System.out.println("O valor total é R$" + carrinho.calcularValorTotal());
 
-        listaTarefa.obterDescricoesTarefas();
+        carrinho.removerItem("Pao");
+
+        carrinho.exibirItens();
     }
 }
